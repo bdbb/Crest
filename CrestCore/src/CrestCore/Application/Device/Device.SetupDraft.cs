@@ -53,7 +53,7 @@ internal sealed partial class Device {
 
     /// The look the Spaces setup makes wear: the one setup chose, or Crest's
     /// own while setup is not open. The caller holds the device lock.
-    internal SetupLook SetupLook => setupFlow?.Look ?? SetupLook.Heraldic;
+    internal SetupLook SetupLook => setupFlow?.Look ?? SetupLook.Modern;
 
     #endregion
 

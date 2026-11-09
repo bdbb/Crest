@@ -47,7 +47,7 @@ enum SessionShowcaseSeed {
                 reason: .autoCleanup, secondsAgo: 540),
         ]
         return SpaceState.Seed(
-            name: "Work", symbol: "hammer.fill", accent: .indigo, branding: SpaceAccent.rose.house, folders: [folder],
+            name: "Work", symbol: "hammer.fill", accent: .indigo, branding: SpaceAccent.rose.scheme, folders: [folder],
             tabs: tabs, archivedTabs: archivedTabs)
     }
 
@@ -64,8 +64,8 @@ enum SessionShowcaseSeed {
             tab("A slower Saturday", page(.personal, title: "A slower Saturday", activeCard: 0), "☀️", .current),
         ]
         return SpaceState.Seed(
-            name: "Personal", symbol: "leaf.fill", accent: .teal, branding: SpaceAccent.indigo.house, folders: [folder],
-            tabs: tabs)
+            name: "Personal", symbol: "leaf.fill", accent: .teal, branding: SpaceAccent.indigo.scheme,
+            folders: [folder], tabs: tabs)
     }
 
     private static func page(

@@ -18,12 +18,11 @@ public sealed class SetupLook {
     public static readonly SetupLook Heraldic = new(Kinds.Heraldic, name: "heraldic", title: "Heraldic", SpaceThemeMode.Banner,
         SpaceIconStyle.LayeredCrest, gradientAngle: null, newSpaceLook: accent => accent.House);
 
-    /// A Space wears a gradient of its colors, from top to bottom, and a
-    /// plain icon.
+    /// A Space wears its accent's scheme: its color washed over the sidebar,
+    /// and a plain icon. A Space with colors of its own wears them as a
+    /// gradient from top to bottom.
     public static readonly SetupLook Modern = new(Kinds.Modern, name: "modern", title: "Modern", SpaceThemeMode.Gradient,
-        SpaceIconStyle.SimpleSymbol, ModernGradientAngle,
-        newSpaceLook: accent => SpaceBranding.Painted(accent.LegacyColors, SpaceBannerPattern.Diagonal, strength: 1,
-            SpaceBranding.LegacyReadabilityFade, SpaceThemeMode.Gradient, ModernGradientAngle, showsTexture: false));
+        SpaceIconStyle.SimpleSymbol, ModernGradientAngle, newSpaceLook: accent => accent.Scheme);
 
     public static IReadOnlyList<SetupLook> All { get; } = [Heraldic, Modern];
 
@@ -85,11 +84,14 @@ public sealed class SetupLook {
         return newSpaceLook(accent);
     }
 
-    /// `branding` in this look: its sidebar mode, gradient angle and icon
-    /// style, keeping its colors and crest, within the ranges every device
-    /// draws.
+    /// `branding` in this look. A look a new Space of another look wears
+    /// becomes the one a new Space of this look wears; any other takes this
+    /// look's sidebar mode, gradient angle and icon style, keeping its colors
+    /// and crest, within the ranges every device draws.
     public SpaceBranding Applying(SpaceBranding branding) {
         ArgumentNullException.ThrowIfNull(branding);
+        foreach (var accent in SpaceAccent.All)
+            if (All.Any(look => look.newSpaceLook(accent) == branding)) return newSpaceLook(accent);
         return SpaceBranding.Normalized(branding with {
             ThemeMode = ThemeMode,
             GradientAngle = GradientAngle ?? branding.GradientAngle,

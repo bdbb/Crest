@@ -12,16 +12,20 @@ public sealed class SpaceAccent {
 
     /// Winter.
     public static readonly SpaceAccent Indigo = new(name: "indigo", tint: SystemTint.Indigo,
-        legacyColors: [Tincture.Ink, Tincture.Ocean, Tincture.Gold], house: SpaceHouse.Winter.Look, swatch: Tincture.Indigo);
+        legacyColors: [Tincture.Ink, Tincture.Ocean, Tincture.Gold], house: SpaceHouse.Winter.Look, scheme: SpaceScheme.Indigo.Look,
+        swatch: Tincture.Indigo);
     /// Sun.
     public static readonly SpaceAccent Orange = new(name: "orange", tint: SystemTint.Orange,
-        legacyColors: [Tincture.Ember, Tincture.Gold, Tincture.Ocean], house: SpaceHouse.Sun.Look, swatch: Tincture.Ember);
+        legacyColors: [Tincture.Ember, Tincture.Gold, Tincture.Ocean], house: SpaceHouse.Sun.Look, scheme: SpaceScheme.Ember.Look,
+        swatch: Tincture.Ember);
     /// Meadow.
     public static readonly SpaceAccent Teal = new(name: "teal", tint: SystemTint.Teal,
-        legacyColors: [Tincture.Teal, Tincture.Ocean, Tincture.Sand], house: SpaceHouse.Meadow.Look, swatch: Tincture.Teal);
+        legacyColors: [Tincture.Teal, Tincture.Ocean, Tincture.Sand], house: SpaceHouse.Meadow.Look, scheme: SpaceScheme.Teal.Look,
+        swatch: Tincture.Teal);
     /// Lion.
     public static readonly SpaceAccent Rose = new(name: "rose", tint: SystemTint.Pink,
-        legacyColors: [Tincture.Rose, Tincture.Indigo, Tincture.Sand], house: SpaceHouse.Lion.Look, swatch: Tincture.Rose);
+        legacyColors: [Tincture.Rose, Tincture.Indigo, Tincture.Sand], house: SpaceHouse.Lion.Look, scheme: SpaceScheme.Rose.Look,
+        swatch: Tincture.Rose);
 
     public static IReadOnlyList<SpaceAccent> All { get; } = [Indigo, Orange, Teal, Rose];
 
@@ -38,10 +42,16 @@ public sealed class SpaceAccent {
     /// background, primary and secondary color.
     public IReadOnlyList<BrandColor> LegacyColors { get; }
 
-    /// The house look a new Space of this accent wears: a deep field, a related
-    /// tincture a step above it and one luminous charge, with the crest
-    /// composed for it. A Space keeps its copy when this changes.
+    /// The house look a Space of this accent wears where it wears heraldry: a
+    /// deep field, a related tincture a step above it and one luminous
+    /// charge, with the crest composed for it. A Space keeps its copy when
+    /// this changes.
     public SpaceBranding House { get; }
+
+    /// The scheme look a new Space of this accent wears: its own color washed
+    /// over the sidebar under a plain icon. A Space keeps its copy when this
+    /// changes.
+    public SpaceBranding Scheme { get; }
 
     /// The one color that stands for the accent, which a color from elsewhere,
     /// such as another browser's Space, is matched against.
@@ -51,11 +61,13 @@ public sealed class SpaceAccent {
 
     #region Constructors
 
-    private SpaceAccent(string name, SystemTint tint, IReadOnlyList<Tincture> legacyColors, SpaceBranding house, Tincture swatch) {
+    private SpaceAccent(string name, SystemTint tint, IReadOnlyList<Tincture> legacyColors, SpaceBranding house,
+        SpaceBranding scheme, Tincture swatch) {
         Name = name;
         Tint = tint;
         LegacyColors = [.. legacyColors.Select(tincture => tincture.Color)];
         House = house;
+        Scheme = scheme;
         Swatch = swatch.Color;
     }
 

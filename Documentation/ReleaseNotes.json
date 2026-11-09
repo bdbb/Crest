@@ -5277,6 +5277,10 @@
     "arc-style-split-row": {
       "category": "improved",
       "message": "On Mac, a Split View is one row in the sidebar with its tabs side by side, as in Arc. Click a half to focus that tab, and right-click one to rename, recolor, separate or close the split."
+    },
+    "arc-style-space-look": {
+      "category": "improved",
+      "message": "New Spaces start in a modern look, as in Arc: one soft color washed over the whole window, and a plain icon in the Space switcher instead of a crest. Setup starts on Modern, the template gallery adds Indigo, Ember, Teal and Rose, and the selected Space no longer wears an outline. Crests and banners remain a choice in each Space's settings."
     }
   }
 }

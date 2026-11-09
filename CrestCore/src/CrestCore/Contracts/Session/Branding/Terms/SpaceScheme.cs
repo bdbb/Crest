@@ -13,7 +13,17 @@ public sealed class SpaceScheme {
     public static readonly SpaceScheme Neutral = new("neutral", "Neutral", SchemeLook(
         [Tincture.NeutralSmoke], Tincture.NeutralGray, strength: 0.15, showsTexture: true));
 
-    public static IReadOnlyList<SpaceScheme> All { get; } = [Neutral];
+    /// An accent's own color laid over the window's background the same way,
+    /// strongly enough to tint it: the look a new Space of the accent wears.
+    public static readonly SpaceScheme Indigo = new("indigo", "Indigo", WashLook(Tincture.Indigo));
+    public static readonly SpaceScheme Ember = new("ember", "Ember", WashLook(Tincture.Ember));
+    public static readonly SpaceScheme Teal = new("teal", "Teal", WashLook(Tincture.Teal));
+    public static readonly SpaceScheme Rose = new("rose", "Rose", WashLook(Tincture.Rose));
+
+    public static IReadOnlyList<SpaceScheme> All { get; } = [Neutral, Indigo, Ember, Teal, Rose];
+
+    /// How strongly an accent's color is laid over the window's background.
+    private const double WashStrength = 0.35;
 
     #endregion
 
@@ -32,10 +42,12 @@ public sealed class SpaceScheme {
 
     #region Constructors
 
+    /// The scheme's look records the scheme as where it started, so a Space
+    /// that leaves it for a house takes the house's strengths.
     private SpaceScheme(string name, string title, SpaceBranding look) {
         Name = name;
         Title = title;
-        Look = look;
+        Look = look with { Crest = look.Crest with { StartingPresetId = name } };
     }
 
     #endregion
@@ -57,6 +69,10 @@ public sealed class SpaceScheme {
             KeepsControlsReadable: false, SpaceThemeMode.Gradient, GradientAngle: 0, showsTexture, SpaceIconStyle.SimpleSymbol,
             symbol.Color, SpaceBranding.Neutral.Crest, SpaceBranding.BaselineRenderingVersion, FolderColorIntensity: 0,
             SpaceTextColorMode.System, HasCustomAppearance: false);
+
+    /// The look of a scheme that washes the sidebar in `color`.
+    private static SpaceBranding WashLook(Tincture color) =>
+        SchemeLook([color], Tincture.NeutralGray, WashStrength, showsTexture: true);
 
     #endregion
 }

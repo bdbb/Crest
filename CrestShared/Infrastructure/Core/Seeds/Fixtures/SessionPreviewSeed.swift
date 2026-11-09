@@ -24,7 +24,7 @@ enum SessionPreviewSeed {
         }
         let clientA = joined(
             SpaceState.Seed(
-                name: "Client A", symbol: "building.2.fill", accent: .teal, branding: SpaceAccent.teal.house,
+                name: "Client A", symbol: "building.2.fill", accent: .teal, branding: SpaceAccent.teal.scheme,
                 tabs: [
                     tab("Figma", "https://figma.com", "pencil.and.outline", .pinned),
                     tab("Client A docs", "https://developer.apple.com/documentation", "doc.text.fill", .saved),
@@ -32,7 +32,7 @@ enum SessionPreviewSeed {
                 ]))
         let clientB = joined(
             SpaceState.Seed(
-                name: "Client B", symbol: "shippingbox.fill", accent: .rose, branding: SpaceAccent.orange.house,
+                name: "Client B", symbol: "shippingbox.fill", accent: .rose, branding: SpaceAccent.orange.scheme,
                 tabs: [tab("WWDC", "https://developer.apple.com/wwdc", "sparkles", .current)]))
         return SessionState.Seed(spaces: [work, clientA, clientB, makePersonalSpace()])
     }
@@ -40,7 +40,7 @@ enum SessionPreviewSeed {
     private static func makeWorkSpace() -> SpaceState.Seed {
         let folder = FolderState.Seed(title: "Build the Browser", symbol: "folder.fill")
         return SpaceState.Seed(
-            name: "Work", symbol: "briefcase.fill", accent: .indigo, branding: SpaceAccent.rose.house,
+            name: "Work", symbol: "briefcase.fill", accent: .indigo, branding: SpaceAccent.rose.scheme,
             folders: [folder],
             tabs: workTabs(folderID: folder.id))
     }
@@ -68,7 +68,7 @@ enum SessionPreviewSeed {
     private static func makePersonalSpace() -> SpaceState.Seed {
         let folder = FolderState.Seed(title: "Reading", symbol: "folder.fill")
         return SpaceState.Seed(
-            name: "Personal", symbol: "house.fill", accent: .orange, branding: SpaceAccent.indigo.house,
+            name: "Personal", symbol: "house.fill", accent: .orange, branding: SpaceAccent.indigo.scheme,
             folders: [folder],
             tabs: [
                 tab("Apple", "https://apple.com", "apple.logo", .pinned),
