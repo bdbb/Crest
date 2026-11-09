@@ -21,7 +21,7 @@ struct BrowserSidebarTabRowConfiguration {
     /// A grouped row is the same row in every other respect — same height,
     /// favicon, title, trailing control, menu, and selection accent. What it
     /// gives up is the sidebar's edge inset, which the container already
-    /// provides.
+    /// provides, and, as one half of a group's single row, its own lift.
     let isSplitGroupMember: Bool
     var spacePresentation: SidebarSpacePresentation? = nil
 
@@ -72,6 +72,13 @@ struct BrowserSidebarTabRowConfiguration {
     /// group, where the container's padding has already placed the row.
     var surfaceHorizontalInset: CGFloat {
         isSplitGroupMember ? 0 : BrowserSidebarMetrics.layerInset
+    }
+
+    /// Whether pulling the row lifts the split group around it rather than
+    /// the row: it is one half of the group's single row, which lifts whole.
+    /// A stacked group's rows each lift on their own, out of the group.
+    var liftsWithSplitGroup: Bool {
+        isSplitGroupMember && capabilities.splitGroupRowMetrics.sharesOneRow
     }
 
     /// The identity this row shares with the surface its page grows out of.

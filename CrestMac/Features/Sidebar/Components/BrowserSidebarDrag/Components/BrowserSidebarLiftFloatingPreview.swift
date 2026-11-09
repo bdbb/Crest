@@ -8,8 +8,8 @@ import SwiftUI
 /// pointer outside without changing the coordinates the drag already reports.
 ///
 /// The art is the sidebar's own drag art — a tab morphing between its row, the
-/// pinned tile, and the page-shaped card; a folder row; a stack of split-group
-/// member lines — so moving where a lift is drawn changed nothing about what it
+/// pinned tile, and the page-shaped card; a folder row; a split group's row of
+/// halves — so moving where a lift is drawn changed nothing about what it
 /// looks like.
 ///
 /// Everything it needs arrives as a value. It reads no drag state, resolves no
@@ -151,7 +151,8 @@ struct BrowserSidebarLiftFloatingPreview: View {
                 members: members,
                 favicons: favicons,
                 profileID: lift.profileID,
-                rowWidth: rowWidth
+                rowWidth: rowWidth,
+                sourceHeight: lift.sourceSize.height
             )
         }
     }

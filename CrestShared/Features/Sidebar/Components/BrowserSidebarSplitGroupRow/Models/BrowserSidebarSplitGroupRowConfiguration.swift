@@ -1,7 +1,6 @@
 import SwiftUI
 
-/// Everything a stacked split-group row is told, and the answers that follow
-/// from it.
+/// Everything a split-group row is told, and the answers that follow from it.
 ///
 /// Gathered once so the container's parts stay small and the group's rules —
 /// which member is focused, where a drop beside the run lands, whether the
@@ -135,6 +134,24 @@ struct BrowserSidebarSplitGroupRowConfiguration {
         assignment = context.assignment
         focusedMemberID = members.first { context.window.shownTabIDs.contains($0.id) }?.id
         self.spacePresentation = spacePresentation
+    }
+
+    // MARK: - Actions - Icon
+
+    /// The icon picker the group presents, carrying its choices out through
+    /// `interaction`.
+    func iconCustomization(
+        _ interaction: BrowserSidebarSplitGroupRowInteractionContext
+    ) -> BrowserIconCustomizationPresentation {
+        BrowserIconCustomizationPresentation(
+            isPresented: interaction.isChoosingIcon,
+            title: "Split View Icon",
+            currentEmoji: emojiIcon,
+            showsReset: emojiIcon != nil,
+            resetTitle: "Use Stacked Icons",
+            setEmoji: interaction.setEmojiIcon,
+            reset: interaction.resetIcon
+        )
     }
 }
 

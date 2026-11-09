@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The macOS lift for a stacked split-group row.
+/// The macOS lift for a split-group row.
 ///
 /// Nothing beyond the in-view reorder source: a pointer `DragGesture` arms the
 /// lift there, and the row itself is what travels under the cursor. The mobile

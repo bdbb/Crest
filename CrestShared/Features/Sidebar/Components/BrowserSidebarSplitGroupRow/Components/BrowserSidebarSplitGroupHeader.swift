@@ -1,46 +1,31 @@
 import SwiftUI
 
-/// The group's own identity and action strip.
+/// A stacked group's own identity and action strip.
 ///
-/// It earns its place twice over now that members are ordinary tab rows. It is
+/// It earns its place twice over where members are stacked tab rows. It is
 /// the only thing that says "these rows are one split" before you notice the
 /// container behind them — full-height rows otherwise read as neighbours that
 /// happen to share a tint. And every member row carries a context menu of its
 /// own, together covering all but a thin frame of the container, so without a
 /// strip that belongs to the group there would be nowhere left to press for
 /// "Separate All Tabs".
+///
+/// A group whose members share one row has no header: the row itself lifts as
+/// the group, and each member's menu ends with the group's.
 struct BrowserSidebarSplitGroupHeader: View {
     let configuration: BrowserSidebarSplitGroupRowConfiguration
     let interaction: BrowserSidebarSplitGroupRowInteractionContext
+    let metrics: BrowserSidebarSplitGroupRowMetrics.Header
 
     @Environment(\.sidebarRowContentIndent) private var folderIndent
 
     var body: some View {
-        HStack(spacing: configuration.metrics.headerSpacing) {
-            BrowserSidebarSplitGroupIcon(configuration: configuration)
-                .browserIconCustomizationPopover(
-                    BrowserIconCustomizationPresentation(
-                        isPresented: interaction.isChoosingIcon,
-                        title: "Split View Icon",
-                        currentEmoji: configuration.emojiIcon,
-                        showsReset: configuration.emojiIcon != nil,
-                        resetTitle: "Use Stacked Icons",
-                        setEmoji: interaction.setEmojiIcon,
-                        reset: interaction.resetIcon
-                    )
-                )
+        HStack(spacing: metrics.spacing) {
+            BrowserSidebarSplitGroupIcon(configuration: configuration, glyphSize: metrics.glyphSize)
+                .browserIconCustomizationPopover(configuration.iconCustomization(interaction))
 
             if interaction.isRenaming {
-                TextField("Split View Name", text: interaction.draftTitle)
-                    .textFieldStyle(.plain)
-                    .focused(interaction.isTitleFocused)
-                    .submitLabel(.done)
-                    .onSubmit(interaction.commitTitle)
-                    .onKeyPress(.escape) {
-                        interaction.cancelTitleEditing()
-                        return .handled
-                    }
-                    .accessibilityIdentifier("split-group-rename-field")
+                BrowserSidebarSplitGroupRenameField(interaction: interaction)
             } else {
                 Button(action: interaction.activate) {
                     Text(configuration.shownTitle)
@@ -74,10 +59,7 @@ struct BrowserSidebarSplitGroupHeader: View {
                 )
             } label: {
                 Image(systemName: "ellipsis")
-                    .frame(
-                        width: configuration.metrics.headerHeight,
-                        height: configuration.metrics.headerHeight
-                    )
+                    .frame(width: metrics.height, height: metrics.height)
                     .contentShape(.rect)
             }
             .menuStyle(.borderlessButton)
@@ -87,7 +69,7 @@ struct BrowserSidebarSplitGroupHeader: View {
             .accessibilityLabel("Split View actions")
             .disabled(!configuration.isAvailableForDisplay)
         }
-        .frame(height: configuration.metrics.headerHeight)
+        .frame(height: metrics.height)
         .padding(.leading, configuration.headerLeadingInset + folderIndent)
         .padding(.trailing, configuration.headerLeadingInset)
         .contentShape(.rect)
@@ -111,16 +93,37 @@ struct BrowserSidebarSplitGroupHeader: View {
                     }
             }
         }
-        .onChange(of: interaction.isTitleFocused.wrappedValue) { _, focused in
-            if !focused, interaction.isRenaming {
-                interaction.commitTitle()
+    }
+}
+
+/// The group's name while it is being edited, in place of whatever names it
+/// at rest. Return commits, as does leaving the field, and Escape abandons
+/// the edit.
+struct BrowserSidebarSplitGroupRenameField: View {
+    let interaction: BrowserSidebarSplitGroupRowInteractionContext
+
+    var body: some View {
+        TextField("Split View Name", text: interaction.draftTitle)
+            .textFieldStyle(.plain)
+            .focused(interaction.isTitleFocused)
+            .submitLabel(.done)
+            .onSubmit(interaction.commitTitle)
+            .onKeyPress(.escape) {
+                interaction.cancelTitleEditing()
+                return .handled
             }
-        }
+            .accessibilityIdentifier("split-group-rename-field")
+            .onChange(of: interaction.isTitleFocused.wrappedValue) { _, focused in
+                if !focused, interaction.isRenaming {
+                    interaction.commitTitle()
+                }
+            }
     }
 }
 
 private struct BrowserSidebarSplitGroupIcon: View {
     let configuration: BrowserSidebarSplitGroupRowConfiguration
+    let glyphSize: CGFloat
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -128,15 +131,12 @@ private struct BrowserSidebarSplitGroupIcon: View {
         Group {
             if let emoji = configuration.emojiIcon {
                 Text(emoji)
-                    .font(.system(size: configuration.metrics.headerGlyphSize))
+                    .font(.system(size: glyphSize))
             } else {
                 faviconStack
             }
         }
-        .frame(
-            width: configuration.metrics.headerGlyphSize * 1.45,
-            height: configuration.metrics.headerGlyphSize
-        )
+        .frame(width: glyphSize * 1.45, height: glyphSize)
         .accessibilityHidden(true)
     }
 
@@ -153,7 +153,7 @@ private struct BrowserSidebarSplitGroupIcon: View {
                     tab: member,
                     favicons: configuration.context.favicons,
                     profileID: configuration.profileID,
-                    size: configuration.metrics.headerGlyphSize * 0.78
+                    size: glyphSize * 0.78
                 )
                 .padding(1)
                 .background { CrestSurfaceLayer(shape: Circle()) }
@@ -185,7 +185,7 @@ private struct BrowserSidebarSplitGroupIcon: View {
                     )
                 } keyframes: { _ in
                     CubicKeyframe(
-                        -configuration.metrics.headerGlyphSize * 0.18,
+                        -glyphSize * 0.18,
                         duration: CrestMotion.collectionTransition / 2
                     )
                     CubicKeyframe(
@@ -217,11 +217,11 @@ private struct BrowserSidebarSplitGroupIcon: View {
     }
 
     private func deckHorizontalOffset(at index: Int) -> CGFloat {
-        CGFloat(index) * configuration.metrics.headerGlyphSize * 0.28
+        CGFloat(index) * glyphSize * 0.28
     }
 
     private func deckVerticalOffset(at index: Int) -> CGFloat {
-        CGFloat(frontIndex - index) * configuration.metrics.headerGlyphSize * 0.045
+        CGFloat(frontIndex - index) * glyphSize * 0.045
     }
 
     private var deckAnimation: Animation? {

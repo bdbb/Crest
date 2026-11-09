@@ -38,9 +38,7 @@ struct BrowserSidebarSelectionLiftPreviewLayout: BrowserSidebarLiftPreviewLayout
             let rowWidth = max(
                 BrowserTabDragPreviewLayout.resolvedRowWidth(lift.rowWidth), row.frame.width,
                 lift.pinnedTileSize.width)
-            let rowHeight = max(
-                row.frame.height, rowSize.height, lift.pinnedTileSize.height,
-                row.isSplit ? CGFloat(row.tabs.count + 1) * rowSize.height : 0)
+            let rowHeight = max(row.frame.height, rowSize.height, lift.pinnedTileSize.height)
             gatheredHeight += rowHeight
             width = max(width, abs(row.frame.minX - lead.frame.minX) + rowWidth)
             height = max(height, abs(row.frame.minY - lead.frame.minY) + rowHeight)

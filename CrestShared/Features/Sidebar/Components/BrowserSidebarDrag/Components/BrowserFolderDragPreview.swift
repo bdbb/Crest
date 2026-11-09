@@ -8,6 +8,8 @@ struct BrowserFolderDragPreview: View {
     var rows: [BrowserFolderDragPreviewRow] = []
     var profileID: UUID?
     var loadedTabIDs: Set<UUID>?
+    /// How the shell that lifted the folder arranges a split group's members.
+    var splitGroupMetrics = BrowserSidebarSplitGroupRowMetrics.pointer
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: BrowserSidebarMetrics.layerCornerRadius(), style: .continuous)
@@ -55,12 +57,20 @@ struct BrowserFolderDragPreview: View {
         case .tab(let tab):
             tabLine(tab, leadingInset: max(BrowserFolderLayout.nestingIndent, row.frame.minX))
         case .splitGroup(let members):
-            VStack(spacing: 0) {
-                Label("\(members.count)", systemImage: "rectangle.split.2x1")
-                    .font(.caption).frame(maxWidth: .infinity, alignment: .leading)
-                ForEach(members, id: \.id) { tab in tabLine(tab, leadingInset: 0).frame(maxHeight: .infinity) }
+            Group {
+                if splitGroupMetrics.sharesOneRow {
+                    HStack(spacing: splitGroupMetrics.memberSpacing) {
+                        ForEach(members, id: \.id) { tab in tabLine(tab, leadingInset: 0) }
+                    }
+                } else {
+                    VStack(spacing: 0) {
+                        Label("\(members.count)", systemImage: "rectangle.split.2x1")
+                            .font(.caption).frame(maxWidth: .infinity, alignment: .leading)
+                        ForEach(members, id: \.id) { tab in tabLine(tab, leadingInset: 0).frame(maxHeight: .infinity) }
+                    }
+                    .padding(BrowserSidebarMetrics.containerPadding)
+                }
             }
-            .padding(BrowserSidebarMetrics.containerPadding)
             .background {
                 CrestSurfaceLayer(
                     shape: .rect(cornerRadius: BrowserSidebarMetrics.layerCornerRadius(depth: 1), style: .continuous))

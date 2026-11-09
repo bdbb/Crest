@@ -30,6 +30,7 @@ struct BrowserSidebarTabRowSurface: ViewModifier {
     let interaction: BrowserSidebarTabRowInteractionContext
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.sidebarSplitGroupMenu) private var splitGroupMenu
     private var tabScale: Double { BrowserDeviceAppearanceStore.shared.tabScale }
 
     func body(content: Content) -> some View {
@@ -91,7 +92,8 @@ struct BrowserSidebarTabRowSurface: ViewModifier {
                 parentSplitGroupID: configuration.isSplitGroupMember ? configuration.tab.splitGroupID : nil,
                 isEnabled: !interaction.isRenaming
                     && configuration.isAvailableForDisplay
-                    && configuration.capabilities.supportsOrganization,
+                    && configuration.capabilities.supportsOrganization
+                    && !configuration.liftsWithSplitGroup,
                 requiresSelectedSpace: true
             )
             .browserSidebarReorderZone(
@@ -110,7 +112,10 @@ struct BrowserSidebarTabRowSurface: ViewModifier {
             .crestCollectionItemTransition()
             .accessibilityElement(children: .contain)
             .contextMenu {
-                if configuration.capabilities.supportsOrganization { organizationMenu }
+                if configuration.capabilities.supportsOrganization {
+                    organizationMenu
+                    if let splitGroupMenu { splitGroupMenu.tint(.primary) }
+                }
             }
             .onChange(of: interaction.isTitleFocused.wrappedValue) { _, focused in
                 if !focused, interaction.isRenaming {

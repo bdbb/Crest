@@ -40,11 +40,12 @@ extension BrowserInteractionCapabilities {
         supportsTouch ? .touch : .pointer
     }
 
-    /// The layout a stacked split-group row draws its container with.
+    /// The layout a split-group row arranges its members with.
     ///
-    /// Touch decides this for the same reason it decides the tab row: the
-    /// grouped surface has to hold rows a finger can tell apart, and the
-    /// header above them has to be legible at the same distance.
+    /// Touch decides this for the same reason it decides the tab row: a
+    /// finger needs the members stacked as rows it can tell apart under a
+    /// header legible at the same distance, where a pointer can aim at one
+    /// half of a single row.
     var splitGroupRowMetrics: BrowserSidebarSplitGroupRowMetrics {
         supportsTouch ? .touch : .pointer
     }

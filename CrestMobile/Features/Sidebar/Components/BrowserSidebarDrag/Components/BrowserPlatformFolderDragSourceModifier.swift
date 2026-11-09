@@ -63,7 +63,8 @@ struct BrowserPlatformFolderDragSourceModifier: ViewModifier {
                                 reorder.state.folderPreviewRows(for: .folder(item)),
                                 in: $0, rootFolderID: folder.id)
                         } ?? [],
-                        profileID: profileID
+                        profileID: profileID,
+                        splitGroupMetrics: .touch
                     )
                     .environment(\.colorScheme, colorScheme)
                 }

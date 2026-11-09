@@ -5273,6 +5273,10 @@
     "arc-style-command-bar": {
       "category": "improved",
       "message": "The command bar is a solid dark panel with one-line results and a filled highlight on the selected one, as in Arc. The recent tab switcher on Mac takes the same panel."
+    },
+    "arc-style-split-row": {
+      "category": "improved",
+      "message": "On Mac, a Split View is one row in the sidebar with its tabs side by side, as in Arc. Click a half to focus that tab, and right-click one to rename, recolor, separate or close the split."
     }
   }
 }

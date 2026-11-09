@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// A split group as one sidebar row, on every shell: a grouped surface holding
-/// the count affordance and one ordinary tab row per member.
+/// one ordinary tab row per member.
 ///
 /// The members are not a compact imitation of a tab row — they are
 /// `BrowserSidebarTabRow`, the same view the rest of the list draws, so a split
@@ -13,7 +13,9 @@ import SwiftUI
 ///
 /// What differs between a pointer shell and a touch one is read from
 /// `BrowserInteractionCapabilities` rather than from which target compiled the
-/// file, so the two shells share this row instead of a resemblance.
+/// file, so the two shells share this row instead of a resemblance. A pointer
+/// shell lays the members out as the equal halves of a row no taller than a
+/// tab's; a touch shell stacks them under a header that names the group.
 struct BrowserSidebarSplitGroupRow: View {
     @Environment(BrowserSidebarInteractionState.self) private var sidebarInteraction
     let groupID: UUID

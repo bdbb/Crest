@@ -1,21 +1,15 @@
 import SwiftUI
 
-/// What a lifted split group looks like under the finger: the grouped container
-/// with its count affordance and one line per member, so the run reads as the
-/// single block it moves as.
+/// What a lifted split group looks like under the pointer or the finger, so
+/// the run reads as the single block it moves as: the one row of halves a
+/// pointer shell draws it as, or a touch shell's grouped container with its
+/// count affordance and one line per member.
 ///
 /// Scoped rather than left to the system's own snapshot, for the reason the tab
 /// and folder previews are: a sidebar row is inset inside its own bounds, and
 /// the default lift plate is the full row rectangle — wider than the surface it
 /// is meant to be lifting, with the plate's own background showing around it.
 struct BrowserSplitGroupDragPreview: View {
-    let members: [TabStateModel]
-    let favicons: FaviconAssets
-    let profileID: UUID
-    var rowWidth = BrowserTabDragPreviewLayout.rowSize.width
-    var sourceHeight: CGFloat?
-    var loadedTabIDs: Set<UUID>?
-
     private static let containerPadding = BrowserSidebarMetrics.containerPadding
     private static let lineSpacing: CGFloat = CrestSpacing.extraExtraSmall
     private static let headerHeight: CGFloat = 20
@@ -24,16 +18,25 @@ struct BrowserSplitGroupDragPreview: View {
     /// the run, and a full-height stack of four would fill the sidebar.
     private static let memberLineHeight: CGFloat = 28
 
+    let members: [TabStateModel]
+    let favicons: FaviconAssets
+    let profileID: UUID
+    var rowWidth = BrowserTabDragPreviewLayout.rowSize.width
+    var sourceHeight: CGFloat?
+    var loadedTabIDs: Set<UUID>?
+    /// How the shell that lifted the group arranges its members.
+    var metrics = BrowserSidebarSplitGroupRowMetrics.pointer
+
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: BrowserSidebarMetrics.layerCornerRadius(), style: .continuous)
 
-        VStack(spacing: Self.lineSpacing) {
-            header
-            ForEach(members, id: \.id) { member in
-                line(for: member)
+        Group {
+            if metrics.sharesOneRow {
+                halves
+            } else {
+                stack
             }
         }
-        .padding(Self.containerPadding)
         .frame(width: BrowserTabDragPreviewLayout.resolvedRowWidth(rowWidth))
         .background { CrestSurfaceLayer(shape: shape) }
         .overlay {
@@ -42,6 +45,44 @@ struct BrowserSplitGroupDragPreview: View {
         .shadow(color: .black.opacity(0.22), radius: 10, y: 5)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Split View with \(members.count) tabs")
+    }
+
+    /// The members as the equal halves of one row, as tall as the row lifted.
+    private var halves: some View {
+        HStack(spacing: metrics.memberSpacing) {
+            ForEach(members, id: \.id) { member in
+                line(for: member)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay(alignment: .leading) {
+                        if member.id != members.first?.id {
+                            Rectangle()
+                                .fill(CrestColor.subtleBorder)
+                                .frame(width: CrestLayout.hairline)
+                                .padding(.vertical, CrestSpacing.small)
+                        }
+                    }
+            }
+        }
+        .frame(height: sourceHeight ?? BrowserTabDragPreviewLayout.rowSize.height)
+    }
+
+    private var stack: some View {
+        VStack(spacing: Self.lineSpacing) {
+            header
+            ForEach(members, id: \.id) { member in
+                line(for: member)
+                    .frame(
+                        height: sourceHeight.map {
+                            max(
+                                Self.memberLineHeight,
+                                ($0 - Self.containerPadding * 2 - Self.headerHeight
+                                    - Self.lineSpacing * CGFloat(members.count))
+                                    / CGFloat(max(members.count, 1)))
+                        } ?? Self.memberLineHeight
+                    )
+            }
+        }
+        .padding(Self.containerPadding)
     }
 
     private var header: some View {
@@ -67,14 +108,6 @@ struct BrowserSplitGroupDragPreview: View {
             Spacer(minLength: 0)
         }
         .padding(.horizontal, CrestSpacing.small)
-        .frame(
-            height: sourceHeight.map {
-                max(
-                    Self.memberLineHeight,
-                    ($0 - Self.containerPadding * 2 - Self.headerHeight - Self.lineSpacing * CGFloat(members.count))
-                        / CGFloat(max(members.count, 1)))
-            } ?? Self.memberLineHeight
-        )
         .browserTabResidency(isLoaded: loadedTabIDs?.contains(member.id) ?? true)
         .allowsHitTesting(false)
     }

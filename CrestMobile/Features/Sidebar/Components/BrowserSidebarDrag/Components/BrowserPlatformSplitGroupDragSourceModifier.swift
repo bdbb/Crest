@@ -60,7 +60,8 @@ struct BrowserPlatformSplitGroupDragSourceModifier: ViewModifier {
                     BrowserSplitGroupDragPreview(
                         members: members,
                         favicons: favicons,
-                        profileID: item.profileID
+                        profileID: item.profileID,
+                        metrics: .touch
                     )
                 }
             }

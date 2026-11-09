@@ -23,7 +23,7 @@ enum BrowserSidebarLiftPreviewSubject: Equatable {
         switch self {
         case .tab: BrowserSidebarTabLiftPreviewLayout()
         case .folder: BrowserSidebarFolderLiftPreviewLayout()
-        case .splitGroup(let members): BrowserSidebarSplitLiftPreviewLayout(memberCount: members.count)
+        case .splitGroup: BrowserSidebarSplitLiftPreviewLayout()
         case .selection(let rows): BrowserSidebarSelectionLiftPreviewLayout(rows: rows)
         }
     }
@@ -60,7 +60,7 @@ enum BrowserSidebarLiftPreviewSubject: Equatable {
     /// The extent the preview window covers for the subject of `lift`, grown
     /// from `base`, the envelope of every shape a lifted row takes: a
     /// selection by its rows both where they were and gathered under the
-    /// grab, and a split by its member lines.
+    /// grab.
     func drawingExtent(from base: CGSize, of lift: BrowserSidebarFloatingLift) -> CGSize {
         layout.drawingExtent(from: base, of: lift)
     }
