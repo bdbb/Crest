@@ -12,6 +12,8 @@ struct SidebarChrome: View {
     let submitAddress: () -> Void
     let commandSurfaceNamespace: Namespace.ID
     let commandPaletteHandoff: BrowserCommandPaletteHandoff
+    let sidebarToggleAction: BrowserSidebarToggleAction
+    let toggleSidebar: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -26,6 +28,24 @@ struct SidebarChrome: View {
                     capabilities: context.capabilities
                 )
                 .contentTransition(.opacity)
+                // Beside the window's own buttons, which stand at this edge
+                // whichever side the sidebar is docked on.
+                .overlay(alignment: .leading) {
+                    Button(
+                        sidebarToggleAction.title,
+                        systemImage: BrowserDeviceAppearanceStore.shared.sidebarOnRight
+                            ? "sidebar.right" : "sidebar.left",
+                        action: toggleSidebar
+                    )
+                    .labelStyle(.iconOnly)
+                    .font(context.capabilities.navigationControlMetrics.historySymbolFont)
+                    .buttonStyle(
+                        CrestChromeButtonStyle(controlSize: context.capabilities.navigationControlMetrics.controlSize)
+                    )
+                    .padding(.leading, BrowserChromeLayout.sidebarWindowControlsWidth)
+                    .accessibilityIdentifier("browser-sidebar-toggle")
+                    .help(sidebarToggleAction.title)
+                }
                 .background {
                     // Only the empty navigation-strip background acts as the
                     // title bar. Controls and tab gestures keep their input.

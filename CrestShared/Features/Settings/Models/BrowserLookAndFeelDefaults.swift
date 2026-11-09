@@ -23,7 +23,7 @@ enum BrowserLookAndFeelDefaults {
     /// A new device's address field appearance, made fresh as ``tabs`` is.
     @MainActor static var address: BrowserAddressAppearance { BrowserAddressAppearance() }
     static let foldersAlwaysVisible = false
-    static let foldersShowTabCounts = true
+    static let foldersShowTabCounts = false
     static let foldersShowBorders = true
     static let foldersIconOnly = false
     static let foldersTintTitle = false

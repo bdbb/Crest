@@ -47,7 +47,7 @@ struct BrowserSpaceHeaderMetrics: Equatable, Sendable {
     /// a row held to one exact height.
     static let pointer = BrowserSpaceHeaderMetrics(
         disclosureGlyphSize: 9,
-        iconSize: 20,
+        iconSize: 16,
         actionsControlSize: 24,
         actionsGlyph: nil,
         fillsRowHeight: true,

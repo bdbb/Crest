@@ -4,23 +4,21 @@ import CoreGraphics
 /// Spaces.
 ///
 /// Only an arrangement with room either side of its picker can carry any, so
-/// each one is optional and the scrolling track ignores both. They are inputs
-/// rather than a fixed pair because the same strip should be able to lose the
-/// sidebar toggle — a docked window has nothing to toggle — without the
-/// switcher learning about docking.
+/// each one is optional and the scrolling track ignores both.
 struct BrowserSpaceSwitcherAccessories {
-    var sidebarToggle: BrowserSpaceSwitcherSidebarToggle?
     var commonLists: BrowserSpaceSwitcherCommonLists?
+    var creation: BrowserSpaceSwitcherCreation?
 }
 
-/// The switcher's accessory at the window's edge: show or hide the sidebar
-/// the switcher is standing in.
-struct BrowserSpaceSwitcherSidebarToggle {
-    let action: BrowserSidebarToggleAction
-    let toggle: () -> Void
+/// The switcher's accessory on the page side: what the plus button makes.
+struct BrowserSpaceSwitcherCreation {
+    let openNewTab: () -> Void
+
+    /// Absent where the window may not add a Space, as in private browsing.
+    let createSpace: (() -> Void)?
 }
 
-/// The switcher's accessory on the page side: the archive, history, and
+/// The switcher's accessory at the window's edge: the archive, history, and
 /// downloads lists, and the badge that says how many finished downloads have
 /// not been looked at yet.
 struct BrowserSpaceSwitcherCommonLists {

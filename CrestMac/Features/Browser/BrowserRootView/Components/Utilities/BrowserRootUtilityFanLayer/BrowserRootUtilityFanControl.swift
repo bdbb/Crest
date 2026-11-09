@@ -12,16 +12,17 @@ struct BrowserRootUtilityFanControl: View {
 
     @Environment(\.layoutDirection) private var layoutDirection
 
-    /// Where the fan settles, from the left edge: beside the trigger, on the
-    /// page's side of the sidebar.
+    /// Where the fan settles, from the left edge: on the page's side of the
+    /// sidebar, which the trigger stands across from at the window's edge.
     private var destinationX: CGFloat {
         let edgeOffset =
             BrowserUtilitySwitcherLayout.buttonSize / 2
             + BrowserUtilitySwitcherLayout.destinationGap
             + BrowserRootMetrics.utilityFanAdditionalEdgeOffset
+        let span = model.sidebarWidth - 2 * BrowserSpaceSwitcherLayout.compactStripHorizontalInset + edgeOffset
         return sidebarOnRight
-            ? localTriggerFrame.minX - edgeOffset
-            : localTriggerFrame.maxX + edgeOffset
+            ? localTriggerFrame.maxX - span
+            : localTriggerFrame.minX + span
     }
 
     var body: some View {

@@ -8,8 +8,8 @@ import SwiftUI
 /// the person's icon sizing picks for that viewport, so overflow scrolls and
 /// the active Space can always be revealed.
 ///
-/// The sidebar toggle keeps to the window's edge and the lists to the page
-/// side, where they fan out, whichever side the sidebar is docked on.
+/// The lists keep to the window's edge and the plus button to the page side,
+/// whichever side the sidebar is docked on.
 struct BrowserSpaceSwitcherCompactStrip: View {
     // MARK: - Variables
 
@@ -99,42 +99,51 @@ struct BrowserSpaceSwitcherCompactStrip: View {
 
     // MARK: - Actions - Accessories
 
-    /// The sidebar toggle on the sidebar's own edge, the lists on the other.
+    /// The lists on the sidebar's own edge, the plus button on the other.
     @ViewBuilder
     private func accessory(at edge: HorizontalEdge) -> some View {
         if edge == sidebarEdge {
-            if let sidebarToggle = accessories.sidebarToggle {
-                toggleButton(sidebarToggle)
+            if let commonLists = accessories.commonLists {
+                commonListsButton(commonLists)
             }
-        } else if let commonLists = accessories.commonLists {
-            commonListsButton(commonLists)
+        } else if let creation = accessories.creation {
+            creationMenu(creation)
         }
     }
 
     private func utilityWidth(at edge: HorizontalEdge) -> CGFloat {
         let isOccupied =
             edge == sidebarEdge
-            ? accessories.sidebarToggle != nil
-            : accessories.commonLists != nil
+            ? accessories.commonLists != nil
+            : accessories.creation != nil
         return isOccupied ? BrowserSpaceSwitcherLayout.utilityButtonSize : 0
     }
 
-    private func toggleButton(
-        _ sidebarToggle: BrowserSpaceSwitcherSidebarToggle
+    private func creationMenu(
+        _ creation: BrowserSpaceSwitcherCreation
     ) -> some View {
-        Button(
-            sidebarToggle.action.title,
-            systemImage: sidebarOnRight ? "sidebar.right" : "sidebar.left",
-            action: sidebarToggle.toggle
-        )
-        .labelStyle(.iconOnly)
+        Menu {
+            Group {
+                Button(ShortcutCommand.newTab, action: creation.openNewTab)
+                if let createSpace = creation.createSpace {
+                    Button("New Space", systemImage: "plus.square.on.square", action: createSpace)
+                }
+            }
+            .crestMenuActionLabelStyle()
+        } label: {
+            Label("New", systemImage: "plus")
+                .labelStyle(.iconOnly)
+                .frame(
+                    width: BrowserSpaceSwitcherLayout.utilityButtonSize,
+                    height: BrowserSpaceSwitcherLayout.utilityButtonSize
+                )
+                .contentShape(.rect)
+        }
+        .menuStyle(.button)
+        .menuIndicator(.hidden)
         .buttonStyle(.borderless)
-        .frame(
-            width: BrowserSpaceSwitcherLayout.utilityButtonSize,
-            height: BrowserSpaceSwitcherLayout.utilityButtonSize
-        )
-        .accessibilityIdentifier("browser-sidebar-toggle")
-        .help(sidebarToggle.action.title)
+        .accessibilityIdentifier("space-switcher-new")
+        .help("New Tab or Space")
     }
 
     private func commonListsButton(

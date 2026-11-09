@@ -43,7 +43,9 @@ struct BrowserSidebarLoadedContent: View {
                 activateAddress: activateAddress,
                 submitAddress: submitAddress,
                 commandSurfaceNamespace: commandSurfaceNamespace,
-                commandPaletteHandoff: commandPaletteHandoff
+                commandPaletteHandoff: commandPaletteHandoff,
+                sidebarToggleAction: sidebarToggleAction,
+                toggleSidebar: toggleSidebar
             )
             .onGeometryChange(for: CGFloat.self) {
                 $0.size.height
@@ -168,10 +170,6 @@ struct BrowserSidebarLoadedContent: View {
     private var switcherAccessories: BrowserSpaceSwitcherAccessories {
         let spaceID = context.browser.shownSpace?.id
         return BrowserSpaceSwitcherAccessories(
-            sidebarToggle: BrowserSpaceSwitcherSidebarToggle(
-                action: sidebarToggleAction,
-                toggle: toggleSidebar
-            ),
             commonLists: BrowserSpaceSwitcherCommonLists(
                 isExpanded: context.utilityPresentation.isSwitcherExpanded,
                 surface: context.utilityPresentation.triggerSurface(for: spaceID),
@@ -182,6 +180,10 @@ struct BrowserSidebarLoadedContent: View {
                 },
                 recordTriggerFrame:
                     context.utilityPresentation.recordTriggerFrame
+            ),
+            creation: BrowserSpaceSwitcherCreation(
+                openNewTab: openNewTab,
+                createSpace: context.chromeActions.createSpace
             )
         )
     }

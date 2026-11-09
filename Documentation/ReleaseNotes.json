@@ -5265,6 +5265,10 @@
     "chromium-pages-load-after-157": {
       "category": "fixed",
       "message": "On Mac, pages in Chromium load again instead of stopping with \"This page stopped responding\" after updating to 0.8.215."
+    },
+    "arc-style-sidebar-chrome": {
+      "category": "improved",
+      "message": "On Mac, the sidebar is laid out like Arc: the sidebar button sits beside the window buttons, the Space's name is a quiet heading whose menu shows under the pointer, Archive, History and Downloads open from the bottom-left, and a plus button at the bottom-right makes a tab or a Space. Folders no longer show tab counts unless you turn them on."
     }
   }
 }

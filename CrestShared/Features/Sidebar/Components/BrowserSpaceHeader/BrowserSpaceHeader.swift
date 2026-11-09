@@ -15,6 +15,9 @@ struct BrowserSpaceHeader: View {
     let actions: BrowserSpaceHeaderActions
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// A pointer shell shows the actions menu only under the pointer, as it
+    /// does a row's other controls.
+    @State private var isHovered = false
 
     init(
         space: some BrowserSpaceIdentifying, isPrivateBrowsing: Bool, isSavedTabsExpanded: Binding<Bool>,
@@ -37,6 +40,7 @@ struct BrowserSpaceHeader: View {
                     metrics: metrics,
                     actions: actions
                 )
+                .opacity(isHovered || !capabilities.revealsRowControlsOnHoverOnly ? 1 : 0)
             }
             .padding(.leading, CrestSpacing.small)
             .padding(.trailing, CrestSpacing.extraSmall)
@@ -44,6 +48,7 @@ struct BrowserSpaceHeader: View {
         .crestHoverSurface(
             cornerRadius: CrestLayout.sidebarControlCornerRadius
         )
+        .onHover { isHovered = $0 }
         .padding(.horizontal, CrestSpacing.small)
     }
 
@@ -54,7 +59,7 @@ struct BrowserSpaceHeader: View {
 
                 Text(space.name)
                     .font(.callout.weight(.semibold))
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.secondary)
                     .lineLimit(1)
 
                 if space.requiresAuthentication {
