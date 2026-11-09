@@ -5269,6 +5269,10 @@
     "arc-style-sidebar-chrome": {
       "category": "improved",
       "message": "On Mac, the sidebar is laid out like Arc: the sidebar button sits beside the window buttons, the Space's name is a quiet heading whose menu shows under the pointer, Archive, History and Downloads open from the bottom-left, and a plus button at the bottom-right makes a tab or a Space. Folders no longer show tab counts unless you turn them on."
+    },
+    "arc-style-command-bar": {
+      "category": "improved",
+      "message": "The command bar is a solid dark panel with one-line results and a filled highlight on the selected one, as in Arc. The recent tab switcher on Mac takes the same panel."
     }
   }
 }

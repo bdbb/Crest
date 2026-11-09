@@ -1,15 +1,19 @@
 import SwiftUI
 
+/// The palette card's surface: Crest's solid dark flyout surface in `shape`,
+/// edged with a hairline.
 struct BrowserCommandPaletteShellMaterial: ViewModifier {
-    let shape: RoundedRectangle
-    let reduceTransparency: Bool
+    // MARK: - Variables
 
-    @ViewBuilder
+    let shape: RoundedRectangle
+
     func body(content: Content) -> some View {
-        if reduceTransparency {
-            content.background(.background, in: shape)
-        } else {
-            content.glassEffect(.regular, in: shape)
-        }
+        content
+            .overlay {
+                shape
+                    .strokeBorder(CrestColor.subtleBorder, lineWidth: CrestLayout.hairline)
+                    .allowsHitTesting(false)
+            }
+            .crestFlyoutStyle(in: shape)
     }
 }

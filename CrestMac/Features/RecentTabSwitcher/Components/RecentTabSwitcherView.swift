@@ -6,7 +6,6 @@ struct RecentTabSwitcherView: View {
     /// How far the cards shrink so the panel fits the display.
     let scale: CGFloat
 
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -21,7 +20,7 @@ struct RecentTabSwitcherView: View {
         .scaleEffect(scale, anchor: .center)
         .frame(width: RecentTabSwitcherMetrics.panelSize(for: model.session.items, scale: scale).width)
         .frame(height: RecentTabSwitcherMetrics.panelSize(for: model.session.items, scale: scale).height)
-        .modifier(BrowserCommandPaletteShellMaterial(shape: shape, reduceTransparency: reduceTransparency))
+        .modifier(BrowserCommandPaletteShellMaterial(shape: shape))
         .clipShape(shape)
         .animation(CrestMotion.surface.unlessReducingMotion(reduceMotion), value: model.session.highlightedIndex)
         .coordinateSpace(.named(RecentTabSwitcherMetrics.coordinateSpace))

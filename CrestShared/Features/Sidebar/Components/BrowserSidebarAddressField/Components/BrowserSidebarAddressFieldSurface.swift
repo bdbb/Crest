@@ -14,8 +14,8 @@ struct BrowserSidebarAddressFieldSurface: ViewModifier {
     let isLoading: Bool
     let isEditing: Bool
     var branding: SpaceBranding? = nil
-    /// Whether the field stands on Liquid Glass, as the command palette it
-    /// grows into does, rather than the device's surface material.
+    /// Whether the field stands on Liquid Glass, as a Quick Window's does,
+    /// rather than the device's surface material.
     var isGlass = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -86,7 +86,8 @@ struct BrowserSidebarAddressFieldSurface: ViewModifier {
         RoundedRectangle(cornerRadius: BrowserSidebarMetrics.layerCornerRadius(), style: .continuous)
     }
 
-    /// The command palette's own glass under a field that stands on it.
+    /// Liquid Glass under a field that stands on it, or the window's
+    /// background where transparency is reduced.
     private struct GlassLayer: ViewModifier {
         let isGlass: Bool
         let shape: RoundedRectangle
@@ -94,11 +95,12 @@ struct BrowserSidebarAddressFieldSurface: ViewModifier {
 
         @ViewBuilder
         func body(content: Content) -> some View {
-            if isGlass {
-                content.modifier(
-                    BrowserCommandPaletteShellMaterial(shape: shape, reduceTransparency: reduceTransparency))
-            } else {
+            if !isGlass {
                 content
+            } else if reduceTransparency {
+                content.background(.background, in: shape)
+            } else {
+                content.glassEffect(.regular, in: shape)
             }
         }
     }

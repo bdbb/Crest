@@ -9,8 +9,8 @@ extension EnvironmentValues {
 /// The overlay palette's arrival and departure.
 ///
 /// It animates nothing itself. It hands its phase to the palette, whose scrim
-/// fades with the frame and whose card fades its glass and its contents on
-/// their own paces, so the glass can take over from the address field before
+/// fades with the frame and whose card fades its surface and its contents on
+/// their own paces, so the surface can take over from the address field before
 /// the contents appear on it.
 struct BrowserCommandPaletteOverlayTransition: Transition {
     // MARK: - Static Variables

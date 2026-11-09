@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A row's second line: its subtitle and, when the person asked to see why
-/// results appear, the reason the palette ranked it there.
+/// What follows a row's title on its line: its subtitle and, when the person
+/// asked to see why results appear, the reason the palette ranked it there.
 struct BrowserCommandPaletteRowDetail: View {
     let model: BrowserCommandPaletteModel
     let row: PaletteRow
@@ -21,7 +21,7 @@ struct BrowserCommandPaletteRowDetail: View {
                         .layoutPriority(1)
                 }
             }
-            .font(.caption)
+            .font(.callout)
             .foregroundStyle(.secondary)
         }
     }

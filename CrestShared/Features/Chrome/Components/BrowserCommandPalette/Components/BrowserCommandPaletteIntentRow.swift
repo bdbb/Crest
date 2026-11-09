@@ -47,13 +47,14 @@ struct BrowserCommandPaletteIntentRow: View {
                 )
                 .accessibilityHidden(true)
 
-                VStack(
-                    alignment: .leading,
+                HStack(
+                    alignment: .firstTextBaseline,
                     spacing: BrowserCommandPaletteMetrics.rowTextSpacing
                 ) {
                     Text(verbatim: item.row.title)
                         .font(.body.weight(.semibold))
                         .lineLimit(1)
+                        .layoutPriority(1)
                     BrowserCommandPaletteRowDetail(model: model, row: item.row)
                 }
 
@@ -65,6 +66,14 @@ struct BrowserCommandPaletteIntentRow: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .contentTransition(.symbolEffect(.replace))
+                    .frame(
+                        width: BrowserCommandPaletteMetrics.shortcutMinimumHeight,
+                        height: BrowserCommandPaletteMetrics.shortcutMinimumHeight
+                    )
+                    .background(
+                        .primary.opacity(BrowserCommandPaletteMetrics.shortcutBackgroundOpacity),
+                        in: .rect(cornerRadius: BrowserCommandPaletteMetrics.shortcutCornerRadius)
+                    )
             }
         }
         .buttonStyle(

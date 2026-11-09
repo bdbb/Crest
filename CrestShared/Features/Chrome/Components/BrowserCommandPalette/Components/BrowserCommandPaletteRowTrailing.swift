@@ -15,7 +15,6 @@ struct BrowserCommandPaletteRowTrailing: View {
             if isSelected, let title = model.selectedOpening.title {
                 Text(title)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Color.accentColor)
                     .transition(.blurReplace)
             } else if let command = row.command,
                 let chord = model.commands?.shortcut(for: command)

@@ -15,13 +15,14 @@ struct BrowserCommandPaletteResultRow: View {
             HStack(spacing: BrowserCommandPaletteMetrics.rowSpacing) {
                 BrowserCommandPaletteRowIcon(model: model, row: item.row)
 
-                VStack(
-                    alignment: .leading,
+                HStack(
+                    alignment: .firstTextBaseline,
                     spacing: BrowserCommandPaletteMetrics.rowTextSpacing
                 ) {
                     Text(verbatim: item.row.title)
                         .font(.body.weight(.semibold))
                         .lineLimit(1)
+                        .layoutPriority(1)
                     BrowserCommandPaletteRowDetail(model: model, row: item.row)
                 }
 
@@ -31,8 +32,17 @@ struct BrowserCommandPaletteResultRow: View {
                     model: model, row: item.row, isSelected: isSelected, namesKind: namesKind)
 
                 Image(systemName: isSelected ? model.selectedOpening.symbol : "arrow.right")
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .contentTransition(.symbolEffect(.replace))
+                    .frame(
+                        width: BrowserCommandPaletteMetrics.shortcutMinimumHeight,
+                        height: BrowserCommandPaletteMetrics.shortcutMinimumHeight
+                    )
+                    .background(
+                        .primary.opacity(BrowserCommandPaletteMetrics.shortcutBackgroundOpacity),
+                        in: .rect(cornerRadius: BrowserCommandPaletteMetrics.shortcutCornerRadius)
+                    )
             }
         }
         .buttonStyle(

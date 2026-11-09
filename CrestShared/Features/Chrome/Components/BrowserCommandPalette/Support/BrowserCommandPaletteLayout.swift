@@ -20,8 +20,9 @@ enum BrowserCommandPaletteLayout {
                 + CGFloat(group.rows) * BrowserCommandPaletteMetrics.resultRowHeight
                 + CGFloat(group.rows - 1) * BrowserCommandPaletteMetrics.resultRowSpacing
         }
-        let spacing = CGFloat(shown.count - 1) * BrowserCommandPaletteMetrics.resultSectionSpacing
-        return min(BrowserCommandPaletteMetrics.resultOuterPadding + groupsHeight + spacing, max(0, maximumHeight))
+        let spacing = CGFloat(shown.count - 1) * BrowserCommandPaletteMetrics.resultGroupSpacing
+        return min(
+            BrowserCommandPaletteMetrics.resultContentPadding * 2 + groupsHeight + spacing, max(0, maximumHeight))
     }
 
     static func resultAreaHeight(
